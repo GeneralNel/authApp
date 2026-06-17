@@ -11,6 +11,7 @@ const expressSession = require('express-session')({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
+    cookie: { maxAge: 60000, secure: false }
 });
 
 app.use(bodyParser.json());
@@ -95,12 +96,11 @@ app.get('/user', connectEnsureLogin.ensureLoggedIn(), (req, res) => {
     res.send(req.user);
 });
 
-app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/login');
+app.get('/logout', (req, res, next) => {
+    req.logOut(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/login');
+    });
 });
-
-/* REGISTER SOME USERS FOR TESTING */
-UserDetails.register({username:'paul', active: false}, 'paul');
-UserDetails.register({username:'joy', active: false}, 'joy');
-UserDetails.register({username:'ray', active: false}, 'ray');
