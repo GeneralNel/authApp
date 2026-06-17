@@ -33,9 +33,9 @@ app.use(passport.session());
 
 const mongoose = require('mongoose');
 
-const passportLocalMongoose = require('passport-local-mongoose');
+const passportLocalMongoose = require('passport-local-mongoose').default;
 
-mongoose.connect('mongodb://localhost/MyDatabase', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost/MyDatabase');
 
 const Schema = mongoose.Schema;
 const UserDetail = new Schema({
@@ -99,3 +99,8 @@ app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/login');
 });
+
+/* REGISTER SOME USERS FOR TESTING */
+UserDetails.register({username:'paul', active: false}, 'paul');
+UserDetails.register({username:'joy', active: false}, 'joy');
+UserDetails.register({username:'ray', active: false}, 'ray');
